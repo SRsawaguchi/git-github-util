@@ -25,3 +25,6 @@ pip3 install -r requirements.txt
 1. 作成したURLに`main`を`push`する。
 1. `solution`という名前のブランチがある場合、これも作成したリポジトリに`push`する。(複数ある場合、複数`push`する。)
 1. `main`に`checkout`する。
+
+## repo_urls.py
+指定したOrganizationのリポジトリのURL一覧を表示する。
