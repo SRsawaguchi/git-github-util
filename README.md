@@ -1,0 +1,27 @@
+# git-github-util
+よく行うGitやGitHubの操作を自動化するスクリプト。  
+大量のリポジトリを作成する必要がある場合などに使う。  
+※自分用  
+
+## 以下の環境変数が設定されている前提
+
+| Key | Value | 
+| -- | -- |
+| GITHUB_TOKEN | GitHubのアクセストークン |
+
+## 依存関係のインストール
+
+```
+pip3 install -r requirements.txt
+```
+
+## deploy_main_and_solution.py
+指定したパスにあるディレクトリを走査する。  
+その中で、Gitのリポジトリであるものに以下の操作を行う。  
+
+1. ブランチ名を`main`に変更(masterブランチなどにいる前提)
+1. もし、`README.md`に変更がある場合、`commit`する。
+1. 当該ディレクトリと同じ名前のリポジトリをGitHub上に作成。
+1. 作成したURLに`main`を`push`する。
+1. `solution`という名前のブランチがある場合、これも作成したリポジトリに`push`する。(複数ある場合、複数`push`する。)
+1. `main`に`checkout`する。
