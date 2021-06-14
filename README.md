@@ -28,3 +28,15 @@ pip3 install -r requirements.txt
 
 ## repo_urls.py
 指定したOrganizationのリポジトリのURL一覧を表示する。
+
+## clone_all_branch.py
+cloneする際、全てのリモートブランチをcloneする。  
+
+パラメタ  
+- `--url` 必須: cloneするリポジトリのURL
+- `--dest` 必須: 保存するディレクトリを指定。（その中にcloneしたディレクトリが生成される。）
+
+実行例
+```
+python3 clone_all_branch.py --url https://***.git --dest ./test
+```
