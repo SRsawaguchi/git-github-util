@@ -1,34 +1,20 @@
 import os
 from time import sleep
 
-import github
 import git
 from github import Github
+import gitutils
 
 # 走査するディレクトリ
 base_dir = ""
 # リポジトリを作成するGitHubのOrganization
 organization = ""
 
-access_token = os.getenv('GITHUB_TOKEN')
-gh = Github(access_token)
-
-def is_git_repository(path):
-    try:
-        git.Repo(path)
-        return True;
-    except git.InvalidGitRepositoryError:
-        return False
-
-def create_repo_on_github(repo_name):
-    org = gh.get_organization(organization)
-    new_repo = org.create_repo(repo_name)
-    return new_repo.clone_url
-
+gh = gitutils.get_github()
 
 files = os.listdir(base_dir)
 
-repo_directories = [f for f in files if is_git_repository(os.path.join(base_dir, f))]
+repo_directories = [f for f in files if gitutils.is_git_repository(os.path.join(base_dir, f))]
 
 for dir in repo_directories:
     print(dir)
@@ -42,7 +28,7 @@ for dir in repo_directories:
         repo.index.commit('Update submission form url')
         print('--> commit README.md')
 
-    remote_url = create_repo_on_github(dir)
+    remote_url = gitutils.create_repo_on_github(dir, organization)
     print('--> create repo: ' + remote_url)
     remote = repo.create_remote(organization, remote_url)
     remote.push('main')

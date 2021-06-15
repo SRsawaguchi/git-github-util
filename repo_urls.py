@@ -1,13 +1,17 @@
-import os
-from github import Github
+import argparse
+import gitutils
 
-# 表示するorganization
-organization = ""
 
-access_token = os.getenv('GITHUB_TOKEN')
-gh = Github(access_token)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('org',metavar='organization', help='organization')
+    args = parser.parse_args()
 
-org = gh.get_organization(organization)
+    gh = gitutils.get_github()
+    org = gh.get_organization(args.org)
+    for repo in org.get_repos():
+        print(repo.html_url)
 
-for repo in org.get_repos():
-    print(repo.html_url)
+
+if __name__ == '__main__':
+    main()
