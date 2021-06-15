@@ -29,6 +29,10 @@ pip3 install -r requirements.txt
 ## repo_urls.py
 指定したOrganizationのリポジトリのURL一覧を表示する。
 
+```
+python3 repo_urls.py <organization>
+```
+
 ## clone_all_branch.py
 cloneする際、全てのリモートブランチをcloneする。  
 
@@ -39,4 +43,17 @@ cloneする際、全てのリモートブランチをcloneする。
 実行例
 ```
 python3 clone_all_branch.py --url https://***.git --dest ./test
+```
+
+## deploy_repo.py
+新規にGitHubにリポジトリを作成し、指定したローカルリポジトリの全てのブランチをPUSHする。  
+
+パラメタ
+- `--path` 必須: ローカルリポジトリのpath
+- `--org` 必須: organization
+- `--remote` 必須: 新規にGitHubに作成したremoteの名前
+
+実行例
+```
+python3 deploy_repo.py --org some-org --remote some-org --path ./some/awesome-lib
 ```
