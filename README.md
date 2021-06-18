@@ -57,3 +57,18 @@ python3 clone_all_branch.py --url https://***.git --dest ./test
 ```
 python3 deploy_repo.py --org some-org --remote some-org --path ./some/awesome-lib
 ```
+
+## deploy_branch.py
+指定したブランチを指定したURLのリモートリポジトリにpushする。  
+
+パラメタ
+- `--path` 必須: ローカルリポジトリのpath
+- `--url` 必須: リモートのURL
+- `--branch` 必須: pushするブランチ名
+
+※`ad9055f94eb34ad2-90ccd5811527bc6e`という名前の一時remoteを作成します。（処理がおわったら自動でremoveする。）
+
+実行例
+```
+python3 deploy_branch.py --url https://*** --branch feature --path ./some/awesome-lib
+```
