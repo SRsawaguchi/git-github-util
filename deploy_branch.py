@@ -6,6 +6,12 @@ import gitutils
 def deploy_branch(path_to_repo, branch_name, remote_url):
     remote_name = 'ad9055f94eb34ad2-90ccd5811527bc6e'
     repo = git.Repo(path_to_repo)
+
+    if gitutils.has_branch(repo, branch_name) == False:
+        repo_name = gitutils.get_repo_name_from_path(path_to_repo)
+        print(f"  [Error] {repo_name} doesn't have '{branch_name}' branch.")
+        return
+
     active_branch = repo.active_branch
     remote = repo.create_remote(remote_name, remote_url)
     repo.git.checkout(branch_name)

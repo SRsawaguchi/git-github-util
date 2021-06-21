@@ -57,3 +57,9 @@ def push_all_branch(repo, remote_name):
     for branch in repo.branches:
         print(f'  -- push: {remote_name}/{branch}')
         remote.push(branch)
+
+
+def has_branch(repo, branch_name):
+    branch = next(
+        (ref.name for ref in repo.references if ref.name == branch_name), None)
+    return branch != None
