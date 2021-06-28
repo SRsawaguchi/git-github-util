@@ -40,10 +40,13 @@ def checkout_remote_branches(repo, remote='origin'):
     repo.git.checkout(active_branch)
 
 
-def get_github(token=''):
+def get_github(token='', hostname=''):
    if not token:
        token = os.getenv('GITHUB_TOKEN')
-   return github.Github(token)
+   if not hostname:
+       return github.Github(token)
+   else:
+       return github.Github(token, base_url=f'https://{hostname}/api/v3')
 
 
 def create_repo_on_github(github, repo_name, organization):

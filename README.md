@@ -30,7 +30,7 @@ pip3 install -r requirements.txt
 指定したOrganizationのリポジトリのURL一覧を表示する。
 
 ```
-python3 repo_urls.py <organization>
+python3 repo_urls.py --org <organization> --hostname <hostname>
 ```
 
 ## clone_all_branch.py
