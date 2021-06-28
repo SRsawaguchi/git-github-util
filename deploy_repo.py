@@ -3,10 +3,12 @@ import git
 import gitutils
 
 
-def deploy_repo(path_to_repo, organization, remote_name):
+def deploy_repo(path_to_repo, organization, remote_name, prefix):
     gh = gitutils.get_github()
     repo = git.Repo(path_to_repo)
     repo_name = gitutils.get_repo_name_from_path(path_to_repo)
+    if prefix:
+        repo_name = prefix + repo_name
     remote_url = gitutils.create_repo_on_github(gh, repo_name, organization)
     print(f'repo: {repo_name}')
     print(f'  -- remote: {remote_url}')
@@ -22,12 +24,14 @@ def parse_arguments():
                         metavar='organization', help='organization')
     parser.add_argument('--remote', required=True,
                         metavar='remote name', help='remote name')
+    parser.add_argument('--prefix', required=False,
+                        metavar='prefix', help='prefix of repository that will be created')
     return parser.parse_args()
 
 
 def main():
     args = parse_arguments()
-    deploy_repo(args.path, args.org, args.remote)
+    deploy_repo(args.path, args.org, args.remote, args.prefix)
 
 
 if __name__ == '__main__':

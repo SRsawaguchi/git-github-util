@@ -52,6 +52,7 @@ python3 clone_all_branch.py --url https://***.git --dest ./test
 - `--path` 必須: ローカルリポジトリのpath
 - `--org` 必須: organization
 - `--remote` 必須: 新規にGitHubに作成したremoteの名前
+- `--prefix`: github上に作成するリポジトリのprefix
 
 実行例
 ```
