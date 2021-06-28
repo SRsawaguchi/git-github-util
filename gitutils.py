@@ -64,5 +64,5 @@ def push_all_branch(repo, remote_name):
 
 def has_branch(repo, branch_name):
     branch = next(
-        (ref.name for ref in repo.references if ref.name == branch_name), None)
+        (ref.name for ref in repo.references if ref.name.lower() == branch_name.lower()), None)
     return branch != None
