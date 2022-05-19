@@ -14,7 +14,7 @@ def deploy_main_and_solution(repo_path, organization, default_branch_name="main"
     if repo.is_dirty():
         path_to_readme = os.path.join(repo.working_tree_dir, "README.md")
         repo.index.add([path_to_readme])
-        repo.index.commit("Update submission form url")
+        repo.index.commit("Update README.md")
         print("--> commit README.md")
 
     remote_url = gitutils.create_repo_on_github(gh, repo_name, organization)
