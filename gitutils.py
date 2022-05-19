@@ -71,7 +71,7 @@ def has_branch(repo, branch_name):
         ),
         None,
     )
-    return branch != None
+    return branch is None
 
 
 def add_branch_protection(
