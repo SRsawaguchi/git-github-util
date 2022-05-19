@@ -1,46 +1,59 @@
 import os
-from time import sleep
 
+import argparse
 import git
-from github import Github
 import gitutils
 
-# 走査するディレクトリ
-base_dir = ""
-# リポジトリを作成するGitHubのOrganization
-organization = ""
 
-gh = gitutils.get_github()
-
-files = os.listdir(base_dir)
-
-repo_directories = [f for f in files if gitutils.is_git_repository(os.path.join(base_dir, f))]
-
-for dir in repo_directories:
-    print(dir)
-    repo = git.Repo(os.path.join(base_dir, dir))
-
-    repo.git.branch('-M', 'main')
+def deploy_main_and_solution(repo_path, organization, default_branch_name="main"):
+    gh = gitutils.get_github()
+    repo = git.Repo(repo_path)
+    repo_name = os.path.basename(repo_path)
+    repo.git.branch("-M", default_branch_name)
 
     if repo.is_dirty():
-        path_to_readme = os.path.join(repo.working_tree_dir, 'README.md')
+        path_to_readme = os.path.join(repo.working_tree_dir, "README.md")
         repo.index.add([path_to_readme])
-        repo.index.commit('Update submission form url')
-        print('--> commit README.md')
+        repo.index.commit("Update submission form url")
+        print("--> commit README.md")
 
-    remote_url = gitutils.create_repo_on_github(dir, organization)
-    print('--> create repo: ' + remote_url)
+    remote_url = gitutils.create_repo_on_github(gh, repo_name, organization)
+    print("--> create repo: " + remote_url)
     remote = repo.create_remote(organization, remote_url)
-    remote.push('main')
-    print('--> push main')
+    remote.push(default_branch_name)
+    print(f"--> push {default_branch_name}")
 
     for ref in repo.references:
-        if 'solution' in ref.name:
+        if "solution" in ref.name:
             solution_branch = ref.name[7:]
-            repo.git.checkout('-b', solution_branch, ref.name)
+            repo.git.checkout("-b", solution_branch, ref.name)
             remote.push(solution_branch)
-            print('--> push ' + solution_branch)
-    
-    repo.git.checkout('main')
-    print('--> checkout main')
-    sleep(1)
+            print("--> push " + solution_branch)
+
+    repo.git.checkout(default_branch_name)
+    print(f"--> checkout {default_branch_name}")
+
+    gitutils.add_branch_protection(gh, organization, repo_name, default_branch_name)
+    print(f"--> branch protection rule added to {default_branch_name}")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--repo",
+        required=True,
+        metavar="repository",
+        help="path to repository",
+    )
+    parser.add_argument(
+        "--org",
+        required=True,
+        metavar="organization",
+        help="organization",
+    )
+    args = parser.parse_args()
+    deploy_main_and_solution(args.repo, args.org)
+
+
+if __name__ == "__main__":
+    main()

@@ -17,36 +17,36 @@ def git_clone(url, dest, name):
 
 
 def get_repo_name_from_url(url):
-    return url.removesuffix('.git').split('/')[-1]
+    return url.removesuffix(".git").split("/")[-1]
 
 
 def get_repo_name_from_path(path):
-    return path.split('/')[-1]
+    return path.split("/")[-1]
 
 
-def checkout_remote_branches(repo, remote='origin'):
+def checkout_remote_branches(repo, remote="origin"):
     active_branch = repo.active_branch
     for ref in repo.references:
-        prog = re.compile(r'.+/(.+)')
-        if (ref.name.startswith(remote)):
+        prog = re.compile(r".+/(.+)")
+        if ref.name.startswith(remote):
             m = prog.match(ref.name)
             if not m:
-                print(f'  - skip: {ref.name}')
+                print(f"  - skip: {ref.name}")
                 continue
             branch_name = m.group(1)
-            if branch_name not in ['HEAD', 'main', 'master', active_branch]:
-                print(f'  - checkout: {ref.name}')
-                repo.git.checkout('-b', branch_name, ref.name)
+            if branch_name not in ["HEAD", "main", "master", active_branch]:
+                print(f"  - checkout: {ref.name}")
+                repo.git.checkout("-b", branch_name, ref.name)
     repo.git.checkout(active_branch)
 
 
-def get_github(token='', hostname=''):
-   if not token:
-       token = os.getenv('GITHUB_TOKEN')
-   if not hostname:
-       return github.Github(token)
-   else:
-       return github.Github(token, base_url=f'https://{hostname}/api/v3')
+def get_github(token="", hostname=""):
+    if not token:
+        token = os.getenv("GITHUB_TOKEN")
+    if not hostname:
+        return github.Github(token)
+    else:
+        return github.Github(token, base_url=f"https://{hostname}/api/v3")
 
 
 def create_repo_on_github(github, repo_name, organization):
@@ -58,11 +58,30 @@ def create_repo_on_github(github, repo_name, organization):
 def push_all_branch(repo, remote_name):
     remote = repo.remotes[remote_name]
     for branch in repo.branches:
-        print(f'  -- push: {remote_name}/{branch}')
+        print(f"  -- push: {remote_name}/{branch}")
         remote.push(branch)
 
 
 def has_branch(repo, branch_name):
     branch = next(
-        (ref.name for ref in repo.references if ref.name.lower() == branch_name.lower()), None)
+        (
+            ref.name
+            for ref in repo.references
+            if ref.name.lower() == branch_name.lower()
+        ),
+        None,
+    )
     return branch != None
+
+
+def add_branch_protection(
+    gh,
+    org,
+    repo_name,
+    branch_name,
+    required_approving_review_count=1,
+):
+    branch = gh.get_repo(f"{org}/{repo_name}").get_branch(branch_name)
+    branch.edit_protection(
+        required_approving_review_count=required_approving_review_count
+    )

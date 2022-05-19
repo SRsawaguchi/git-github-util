@@ -16,8 +16,7 @@ pip3 install -r requirements.txt
 ```
 
 ## deploy_main_and_solution.py
-指定したパスにあるディレクトリを走査する。  
-その中で、Gitのリポジトリであるものに以下の操作を行う。  
+指定したローカルのリポジトリについて以下の操作を行う。  
 
 1. ブランチ名を`main`に変更(masterブランチなどにいる前提)
 1. もし、`README.md`に変更がある場合、`commit`する。
@@ -25,6 +24,16 @@ pip3 install -r requirements.txt
 1. 作成したURLに`main`を`push`する。
 1. `solution`という名前のブランチがある場合、これも作成したリポジトリに`push`する。(複数ある場合、複数`push`する。)
 1. `main`に`checkout`する。
+1. branch protection ruleを追加する。(mainブランチへのマージにPRへのApproveを必須にする。)
+
+パラメタ
+- `--repo` 必須: リポジトリへのpath
+- `--org` 必須: organization
+
+実行例
+```
+python3 deploy_main_and_solution.py --repo ./path/to/repo --org some-org
+```
 
 ## repo_urls.py
 指定したOrganizationのリポジトリのURL一覧を表示する。
