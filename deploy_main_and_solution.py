@@ -5,11 +5,18 @@ import git
 import gitutils
 
 
-def deploy_main_and_solution(repo_path, organization, default_branch_name="main"):
+def deploy_main_and_solution(
+    repo_path,
+    organization,
+    default_branch_name="main",
+    branch_protection=False,
+):
     gh = gitutils.get_github()
     repo = git.Repo(repo_path)
     repo_name = os.path.basename(repo_path)
     repo.git.branch("-M", default_branch_name)
+
+    print(repo_name)
 
     if repo.is_dirty():
         path_to_readme = os.path.join(repo.working_tree_dir, "README.md")
@@ -23,18 +30,25 @@ def deploy_main_and_solution(repo_path, organization, default_branch_name="main"
     remote.push(default_branch_name)
     print(f"--> push {default_branch_name}")
 
+    did_solution_pushed = False
     for ref in repo.references:
         if "solution" in ref.name:
-            solution_branch = ref.name[7:]
-            repo.git.checkout("-b", solution_branch, ref.name)
-            remote.push(solution_branch)
-            print("--> push " + solution_branch)
+            if ref.name == "solution" or ref.name == "solutions":
+                solution_branch = ref.name
+                repo.git.checkout(solution_branch)
+                remote.push(solution_branch)
+                print("--> push " + solution_branch)
+                did_solution_pushed = True
+
+    if did_solution_pushed is False:
+        print("--> There is no branch named `solution`.")
 
     repo.git.checkout(default_branch_name)
     print(f"--> checkout {default_branch_name}")
 
-    gitutils.add_branch_protection(gh, organization, repo_name, default_branch_name)
-    print(f"--> branch protection rule added to {default_branch_name}")
+    if branch_protection:
+        gitutils.add_branch_protection(gh, organization, repo_name, default_branch_name)
+        print(f"--> branch protection rule added to {default_branch_name}")
 
 
 def main():
@@ -49,8 +63,13 @@ def main():
         "--org",
         required=True,
         metavar="organization",
-        help="organization",
     )
+    parser.add_argument(
+        "--branch-protection",
+        default=False,
+        metavar="add branch protection",
+    )
+
     args = parser.parse_args()
     deploy_main_and_solution(args.repo, args.org)
 

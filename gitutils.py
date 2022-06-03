@@ -63,15 +63,10 @@ def push_all_branch(repo, remote_name):
 
 
 def has_branch(repo, branch_name):
-    branch = next(
-        (
-            ref.name
-            for ref in repo.references
-            if ref.name.lower() == branch_name.lower()
-        ),
-        None,
-    )
-    return branch is None
+    for ref in repo.references:
+        if ref.name.lower() == branch_name.lower():
+            return True
+    return False
 
 
 def add_branch_protection(

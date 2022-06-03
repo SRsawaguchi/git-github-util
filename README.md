@@ -29,6 +29,7 @@ pip3 install -r requirements.txt
 パラメタ
 - `--repo` 必須: リポジトリへのpath
 - `--org` 必須: organization
+- `--branch-protection` 任意: Trueを指定するとブランチプロテクションを設定する。デフォルトはFalse。
 
 実行例
 ```
