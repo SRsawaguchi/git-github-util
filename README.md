@@ -36,6 +36,21 @@ pip3 install -r requirements.txt
 python3 deploy_main_and_solution.py --repo ./path/to/repo --org some-org
 ```
 
+## add_branch_protection.py
+指定したリポジトリにブランチプロテクションを設定する。  
+ブランチプロテクションの内容は、指定したブランチへのマージにApproveを必須とするもの。
+
+
+パラメタ
+- `--repo` 必須: リポジトリ名
+- `--org` 必須: organization
+- `--branch` 任意: protectionするブランチ。デフォルトは`main`。
+
+実行例
+```
+python3 add_branch_protection.py --org some-org --repo some_repo --branch develop
+```
+
 ## repo_urls.py
 指定したOrganizationのリポジトリのURL一覧を表示する。
 
