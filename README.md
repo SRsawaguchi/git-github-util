@@ -98,3 +98,34 @@ python3 deploy_repo.py --org some-org --remote some-org --path ./some/awesome-li
 ```
 python3 deploy_branch.py --url https://*** --branch feature --path ./some/awesome-lib
 ```
+
+## create_new_repo_from.py
+とあるリポジトリを元に、新しいリポジトリを作成できます。以下が可能です。  
+- 指定したディレクトリ（リポジトリ）をcopyして新しいリポジトリを作成（除外するフォルダを指定できます。）
+- 元のリポジトリのsolutionブランチにある変更を新しいリポジトリのsolutionブランチとして作成（反映させるフォルダを選択可能）
+- 指定したGitHub Organizationへのリポジトリの作成およびpush
+
+なお、新しいリポジトリには、元のリポジトリの履歴は引き継がれません。
+
+パラメタ
+- `--repo` 必須: 元となるリポジトリのパス
+- `--dest` 必須: 出力先ディレクトリ
+- `--src` 任意: solutionブランチにコピーするディレクトリ (複数指定可)。デフォルトは"src"
+- `--exclude` 任意: 除外するディレクトリ (複数指定可)
+- `--org` 任意: GitHubの組織名 (プッシュする場合)
+
+実行例
+```
+python3 create_new_repo_from.py \
+    --org some-org \
+    --repo ../repos/_transfer/course.web0x.work_html \
+    --dest ../repos/web \
+    --src src \
+    --exclude ai_tool .github
+```
+
+この例では:
+1. `../repos/_transfer/course.web0x.work_html` リポジトリをコピーして `../repos/web` に新しいリポジトリを作成(このとき、ai_toolsと.githubフォルダは新しいリポジトリにコピーされません。)
+2. 新しいリポジトリのgitを初期化し、コピーした内容でmainブランチを作成
+3. 元のリポジトリの`solution`ブランチにある`src` ディレクトリを新しいリポジトリにコピーし、この状態で`solution`ブランチを作成。
+5. 作成したリポジトリを `some-org` 組織にプッシュ
