@@ -15,6 +15,7 @@ def create_new_repo_from(source_repo_path, dest_dir, src_dirs=None, exclude_dirs
         src_dirs (list): solutionブランチにコピーするディレクトリのリスト
         exclude_dirs (list): 除外するディレクトリのリスト
     """
+    print(f"\ncreating new repository from: {source_repo_path}")
     if not os.path.exists(source_repo_path):
         print(f"there is no source repository: {source_repo_path}")
         sys.exit(1)
@@ -33,13 +34,13 @@ def create_new_repo_from(source_repo_path, dest_dir, src_dirs=None, exclude_dirs
         sys.exit(1)
 
     # ディレクトリのコピー
-    print(f"- copying directory: {source_repo_path} -> {dest_repo_path}")
+    print(f"--> copying directory: {source_repo_path} -> {dest_repo_path}")
     shutil.copytree(
         source_repo_path, dest_repo_path, ignore=shutil.ignore_patterns(".git")
     )
 
     # 不要なディレクトリを削除
-    print("removing unnecessary directories...")
+    print("--> removing unnecessary directories...")
     if exclude_dirs:
         for exclude_dir in exclude_dirs:
             exclude_path = os.path.join(dest_repo_path, exclude_dir)
@@ -51,7 +52,7 @@ def create_new_repo_from(source_repo_path, dest_dir, src_dirs=None, exclude_dirs
                     os.remove(exclude_path)
 
     # Gitの初期化
-    print(f"- initializing git repository: {dest_repo_path}")
+    print(f"--> initializing git repository: {dest_repo_path}")
     repo = git.Repo.init(dest_repo_path)
 
     # 最初のコミット
@@ -61,7 +62,7 @@ def create_new_repo_from(source_repo_path, dest_dir, src_dirs=None, exclude_dirs
     print("  - commit created: 'initial commit'")
 
     # solutionブランチを作成
-    print(f"- setting up solution branch: {dest_repo_path}")
+    print(f"--> setting up solution branch: {dest_repo_path}")
     repo.git.checkout("-b", "solution")
     print("  - 'solution' branch created")
 
@@ -116,8 +117,8 @@ def create_new_repo_from(source_repo_path, dest_dir, src_dirs=None, exclude_dirs
 
     # mainブランチに戻る
     repo.git.checkout("main")
-    print(f"- checkout to main branch: {dest_repo_path}")
-    print(f"- completed! new repository created: {dest_repo_path}")
+    print(f"--> checkout to main branch: {dest_repo_path}")
+    print(f"--> completed! new repository created: {dest_repo_path}")
 
     return dest_repo_path
 
@@ -141,7 +142,7 @@ def push_to_github(repo_path, organization):
     repo = git.Repo(repo_path)
     repo_name = os.path.basename(repo_path)
 
-    print(f"- setting up GitHub repository: {organization}/{repo_name}")
+    print(f"--> setting up GitHub repository: {organization}/{repo_name}")
     try:
         # GitHubのインスタンスを取得
         gh = gitutils.get_github()
@@ -162,7 +163,9 @@ def push_to_github(repo_path, organization):
         remote.push("solution")
         print(f"  - pushed solution branch")
 
-        print(f"- completed! repository pushed to GitHub: {organization}/{repo_name}")
+        print(
+            f"*** completed! repository pushed to GitHub: https://github.com/{organization}/{repo_name} ***"
+        )
     except Exception as e:
         print(f"エラー: GitHubへのプッシュに失敗しました: {e}")
 
