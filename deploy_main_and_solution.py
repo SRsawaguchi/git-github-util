@@ -66,12 +66,16 @@ def main():
     )
     parser.add_argument(
         "--branch-protection",
-        default=False,
-        metavar="add branch protection",
+        action="store_true",
+        dest="branch_protection",
     )
 
     args = parser.parse_args()
-    deploy_main_and_solution(args.repo, args.org)
+    deploy_main_and_solution(
+        repo_path=args.repo,
+        organization=args.org,
+        branch_protection=args.branch_protection,
+    )
 
 
 if __name__ == "__main__":
